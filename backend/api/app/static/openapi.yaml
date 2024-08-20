@@ -1,0 +1,928 @@
+openapi: 3.0.0
+info:
+  title: Quick Assist API
+  version: 1.0.0
+  description: API documentation for Quick Assist, a service booking application.
+servers:
+  - url: http://localhost:5000/api/v1
+    description: Local development server
+
+paths:
+  /auth/signup:
+    post:
+      summary: User registration
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                phoneNumber:
+                  type: string
+                address:
+                  type: string
+                type:
+                  type: string
+                  description: Type of user (user/provider)
+              required:
+                - email
+                - password
+                - firstName
+                - lastName
+                - phoneNumber
+                - type
+      responses:
+        '201':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User registered successfully
+                  data:
+                    $ref: '#/components/schemas/User'
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 201
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Invalid input data
+
+  /auth/login:
+    post:
+      summary: User login
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+              required:
+                - email
+                - password
+      responses:
+        '200':
+          description: User logged in successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Login successful
+                  data:
+                    type: object
+                    properties:
+                      access_token:
+                        type: string
+                      refresh_token:
+                        type: string
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Invalid credentials
+  /auth/logout:
+    post:
+      summary: User logout
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                access_token:
+                  type: string
+              required:
+                - access_token
+      responses:
+        '204':
+          description: User logged out successfully
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Invalid access token
+  /providers:
+    get:
+      summary: Get all providers
+      tags:
+        - Provider
+      responses:
+        '200':
+          description: List of all providers
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: All providers retrieved successfully
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Provider'
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+    post:
+      summary: Create a new provider
+      tags:
+        - Provider
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Provider'
+      responses:
+        '201':
+          description: Provider created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Provider'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Missing required field
+
+  /providers/{id}:
+    get:
+      summary: Get a specific provider
+      tags:
+        - Provider
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the provider
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Provider retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Provider'
+        '404':
+          description: Provider not found
+    put:
+      summary: Update a provider
+      tags:
+        - Provider
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the provider
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Provider'
+      responses:
+        '200':
+          description: Provider updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Provider'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Invalid data, Bad request
+        '404':
+          description: Provider not found
+    delete:
+      summary: Delete a provider
+      tags:
+        - Provider
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the provider
+          schema:
+            type: string
+      responses:
+        '203':
+          description: Provider deleted successfully
+        '404':
+          description: Provider not found
+
+  /providers/{id}/bookings:
+    get:
+      summary: Get all bookings for a provider
+      tags:
+        - Provider
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the provider
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of bookings for the provider
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Provider bookings retrieved successfully
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Booking'
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+        '404':
+          description: Provider not found
+
+  /providers/{id}/reviews:
+    get:
+      summary: Get all reviews for a provider
+      tags:
+        - Provider
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the provider
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of reviews for the provider
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Provider reviews retrieved successfully
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Review'
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+        '404':
+          description: Provider not found
+
+  /reviews:
+    get:
+      summary: Get all reviews
+      tags:
+        - Review
+      responses:
+        '200':
+          description: List of all reviews
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: All reviews retrieved successfully
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Review'
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+    post:
+      summary: Create a new review
+      tags:
+        - Review
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Review'
+      responses:
+        '201':
+          description: Review created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Review'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Missing required field
+
+  /reviews/{id}:
+    get:
+      summary: Get a specific review
+      tags:
+        - Review
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the review
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Review retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Review'
+        '404':
+          description: Review not found
+    put:
+      summary: Update a review
+      tags:
+        - Review
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the review
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Review'
+      responses:
+        '200':
+          description: Review updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Review'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Invalid data, Bad request
+        '404':
+          description: Review not found
+    delete:
+      summary: Delete a review
+      tags:
+        - Review
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the review
+          schema:
+            type: string
+      responses:
+        '203':
+          description: Review deleted successfully
+        '404':
+          description: Review not found
+
+  /services:
+    get:
+      summary: Get all services
+      tags:
+        - Service
+      responses:
+        '200':
+          description: List of all services
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: All services retrieved successfully
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Service'
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+    post:
+      summary: Create a new service
+      tags:
+        - Service
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Service'
+      responses:
+        '201':
+          description: Service created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Service'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Missing required field
+
+  /services/{id}:
+    get:
+      summary: Get a specific service
+      tags:
+        - Service
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the service
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Service retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Service'
+        '404':
+          description: Service not found
+    put:
+      summary: Update a service
+      tags:
+        - Service
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the service
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Service'
+      responses:
+        '200':
+          description: Service updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Service'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Invalid data, Bad request
+        '404':
+          description: Service not found
+    delete:
+      summary: Delete a service
+      tags:
+        - Service
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the service
+          schema:
+            type: string
+      responses:
+        '203':
+          description: Service deleted successfully
+        '404':
+          description: Service not found
+
+  /services/{id}/providers:
+    get:
+      summary: Get all providers for a service
+      tags:
+        - Service
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the service
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of providers for the service
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Service providers retrieved successfully
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Provider'
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+        '404':
+          description: Service not found
+
+  /users:
+    get:
+      summary: Get all users
+      tags:
+        - User
+      security:
+        - jwtAuth: []
+      responses:
+        '200':
+          description: List of all users
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: All users generated successfully
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+
+  /users/{id}:
+    get:
+      summary: Get a specific user
+      tags:
+        - User
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the user
+          schema:
+            type: string
+      security:
+        - jwtAuth: []
+      responses:
+        '200':
+          description: User retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: User not found
+    put:
+      summary: Update a user
+      tags:
+        - User
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the user
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      security:
+        - jwtAuth: []
+      responses:
+        '200':
+          description: User updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Invalid data, Bad request
+        '404':
+          description: User not found
+    delete:
+      summary: Delete a user
+      tags:
+        - User
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the user
+          schema:
+            type: string
+      security:
+        - jwtAuth: []
+      responses:
+        '203':
+          description: User deleted successfully
+        '404':
+          description: User not found
+
+  /users/{id}/bookings:
+    get:
+      summary: Get all bookings for a user
+      tags:
+        - User
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the user
+          schema:
+            type: string
+      security:
+        - jwtAuth: []
+      responses:
+        '200':
+          description: List of bookings for the user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User bookings retrieved successfully
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Booking'
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+        '404':
+          description: User not found
+
+components:
+  schemas:
+    Booking:
+      type: object
+      properties:
+        id:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        date:
+          type: string
+          format: date-time
+        description:
+          type: string
+        status:
+          type: string
+        service:
+          type: string
+        user_id:
+          type: string
+        provider_id:
+          type: string
+        user:
+          type: string
+        provider:
+          type: string
+
+    Provider:
+      type: object
+      properties:
+        id:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        address:
+          type: string
+        phoneNumber:
+          type: string
+        gender:
+          type: string
+        about:
+          type: string
+        age:
+          type: integer
+        chargePerHour:
+          type: integer
+        rating:
+          type: integer
+        is_verified:
+          type: boolean
+        skills:
+          type: array
+          items:
+            type: string
+        lastLogin:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    Review:
+      type: object
+      properties:
+        id:
+          type: string
+        review:
+          type: string
+        rating:
+          type: integer
+        provider_id:
+          type: string
+        provider:
+          type: string
+
+    Service:
+      type: object
+      properties:
+        id:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        name:
+          type: string
+        description:
+          type: string
+
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        address:
+          type: string
+        phoneNumber:
+          type: string
+        lastLogin:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        is_verified:
+          type: boolean
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
