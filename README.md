@@ -46,7 +46,7 @@ Ensure you have the following installed:
    ```bash
    git clone https://github.com/Armolas/QuickAssist.git
    cd QuickAssist
-  ```
+   ```
 2. Install Python dependencies:
   ```bash
   cd backend
