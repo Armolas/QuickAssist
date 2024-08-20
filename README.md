@@ -37,9 +37,9 @@ QuickAssist provides a platform where users can register as either service provi
 
 ### Prerequisites
 Ensure you have the following installed:
-- ![Python](https://www.python.org/static/community_logos/python-logo-master-v3-TM.png) Python 3.8+
-- ![Node.js](https://nodejs.org/static/images/logo.svg) Node.js and npm
-- ![Git](https://upload.wikimedia.org/wikipedia/commons/e/e0/Git-logo.svg) Git
+- <img src="https://www.python.org/static/community_logos/python-logo-master-v3-TM.png" alt="Python" width="50"/> Python 3.8+
+- <img src="https://nodejs.org/static/images/logo.svg" alt="Node.js" width="50"/> Node.js and npm
+- <img src="https://upload.wikimedia.org/wikipedia/commons/e/e0/Git-logo.svg" alt="Git" width="50"/> Git
 
 ### Installation
 1. Clone the repository:
