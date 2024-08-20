@@ -1,10 +1,10 @@
 # QuickAssist
 
-![Python](https://www.python.org/static/community_logos/python-logo-master-v3-TM.png) 
-![Flask](https://flask.palletsprojects.com/en/2.0.x/_images/flask-logo.png) 
-![React](https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg) 
-![Node.js](https://nodejs.org/static/images/logo.svg) 
-![NPM](https://upload.wikimedia.org/wikipedia/commons/d/db/Npm-logo.svg) 
+<img src="https://www.python.org/static/community_logos/python-logo-master-v3-TM.png" alt="Python" width="100"/> 
+<img src="https://flask.palletsprojects.com/en/2.0.x/_images/flask-logo.png" alt="Flask" width="100"/> 
+<img src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" alt="React" width="100"/> 
+<img src="https://nodejs.org/static/images/logo.svg" alt="Node.js" width="100"/> 
+<img src="https://upload.wikimedia.org/wikipedia/commons/d/db/Npm-logo.svg" alt="NPM" width="100"/> 
 
 QuickAssist is a web application designed to connect users with service providers offering a variety of services such as house cleaning, market shopping, babysitting, cooking, and laundry. This project serves as a portfolio piece for Muritadhor Arowolo, a Software Engineering student at ALX Africa, and was submitted as part of the graduation requirements for the specialization phase of the ALX Software Engineering program.
 
