@@ -7,7 +7,7 @@ from app.models.provider import Provider
 
 class AuthTestCase(unittest.TestCase):
     def setUp(self):
-        self.app = create_app()  # Use your testing configuration
+        self.app = create_app()
         self.client = self.app.test_client()
         self.app_context = self.app.app_context()
         self.app_context.push()
